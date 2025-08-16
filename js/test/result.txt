@@ -1,0 +1,2 @@
+the result is Hello, my name is kheled!
+, I'm learning JS for backend dev
