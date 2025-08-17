@@ -36,3 +36,16 @@ fs.readFile("./Backend/js/test/first.txt", "utf8", (err, result) => {
     );
   });
 });
+
+
+// const { createReadStream } = require("fs");
+// const stream = createReadStream("./test/result.txt", {
+//   highWaterMark: 90000,
+//   encoding: "utf8",
+// });
+
+// stream.on("data", (result) => {
+//   console.log(result);
+// });
+
+// stream.emit("data");

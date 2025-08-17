@@ -1,52 +1,17 @@
-// async & await function!!!
+const express = require("express");
+const path = require("path");
 
-// const util = require("util");
-// const readFilePromise = util.promisify(readFile);
-// const writeFilePromise = util.promisify(writeFile);
+const app = express();
 
-// the cleanest, and best way to handel the event loop
-// const { readFile, writeFile } = require("fs").promises;
-// const start = async () => {
-//   try {
-//     const first = await readFile("./test/first.txt", "utf8");
-//     const secound = await readFile("./test/secound.txt", "utf8");
-//     await writeFile("./test/result.txt", first + secound);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const getText = (path) => {
-//   return new Promise((resolve, reject) => {
-//     readFile(path, "utf8", (err, result) => {
-//       if (err) {
-//         reject(err);
-//       }
-//       resolve(result);
-//     });
-//   });
-// };
-
-// getText("./test/first.txt")
-//   .then((result) => console.log(result))
-//   .catch((err) => console.log(err));
-
-// const EventEmiter = require("events");
-// const eventEmiter = new EventEmiter();
-
-// eventEmiter.on("res", () => {
-//   console.log(`data recived`);
-// });
-// eventEmiter.emit("res");
-
-const { createReadStream } = require("fs");
-const stream = createReadStream("./test/result.txt", {
-  highWaterMark: 90000,
-  encoding: "utf8",
+app.use(express.static("./public"));
+app.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./Frontend/Home/index.html"));
 });
 
-stream.on("data", (result) => {
-  console.log(result);
+app.use((req, res) => {
+  res.status(404).send("Page is not found!");
 });
 
-stream.emit("data");
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
+});
