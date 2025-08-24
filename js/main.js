@@ -1,35 +1,52 @@
 const express = require("express");
 const app = express();
 
-const { products } = require("./Data/products.js");
-// const path = require("path");
+const { users } = require("./Data/Data.js");
 
-// app.use(express.static("./public"));
-// app.get("/", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "./Frontend/Home/index.html"));
-//  we can dump the index.html file in the public folder
-//  or  SSR
-// });
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.status(200).send('<h1>Home Page</h1> <a href="/products">products</a>');
-});
-
-app.get("/products/:productID", (req, res) => {
-  const { productID } = req.params;
-  const selectedProducted = products.find(
-    (product) => product.id === Number(productID)
-  );
-  if (!selectedProducted) {
-    return res.status(404).send("<h1>Product does not exist!</h1>");
+app.post("/", (req, res) => {
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).send("Empty Data");
+    }
+    const { name, email, age } = req.body;
+    if (!name || !email || !age) {
+      return res.status(400).send("Missing required fields");
+    }
+    res.status(201).json({
+      message: "Data submitted",
+      user: { name, email, age },
+    });
+  } catch (error) {
+    console.error("Error in /login:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Server error, please try again later.",
+    });
   }
-  res.status(200).json(selectedProducted);
 });
 
-app.use((req, res) => {
-  res.status(404).send("Page is not found!");
+app.post("/api/postman/user", (req, res) => {
+  const { name, email, age } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: "data not submitted" });
+  }
+  const newUser = {
+    id: users.length + 1,
+    name,
+    email,
+    age,
+  };
+
+  users.push(newUser);
+  res.status(201).json({ message: "data submitted", users });
 });
 
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+app.get("/api/users", (req, res) => {
+  res.status(200).json({ sucess: true, data: data.users }).end();
 });
+
+app.listen(5000, () => {});
